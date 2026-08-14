@@ -10,7 +10,9 @@ class ClassController extends Controller
 {
     public function index()
     {
-        $classes = ClassModel::all();
+        $classes = ClassModel::orderByRaw('CAST(grade AS UNSIGNED)')
+    ->orderBy('name')
+    ->get();
 
         return view('admin.classes.index', compact('classes'));
     }
@@ -23,11 +25,13 @@ class ClassController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required'
+            'grade' => 'required|in:9,10,11,12',
+            'name' => 'required|string|max:50',
         ]);
 
         ClassModel::create([
-            'name' => $request->name
+            'grade' => $request->grade,
+            'name' => $request->name,
         ]);
 
         return redirect()->route('admin.classes.index');

@@ -28,6 +28,11 @@
     <td>{{ $teacher->phone }}</td>
 </tr>
 
+<a href="{{ route('admin.teachers.subjects', $teacher->id) }}"
+   class="btn btn-primary btn-sm">
+    Assign Subjects
+</a>
+
 @endforeach
 
 </table>

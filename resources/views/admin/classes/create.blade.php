@@ -1,21 +1,65 @@
-@extends('layouts.admin')
+<x-app-layout>
 
-@section('content')
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            Create Section
+        </h2>
+    </x-slot>
 
-<h2>Add New Class</h2>
+    <div class="py-12">
+        <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
 
-<form action="{{ route('admin.classes.store') }}" method="POST">
+            <div class="bg-white p-6 shadow-sm sm:rounded-lg">
 
-    @csrf
+                <form method="POST" action="{{ route('admin.classes.store') }}">
+                    @csrf
 
-    <label>Class Name</label>
+                    <!-- Grade -->
+                    <div class="mb-4">
+                        <label class="block font-medium text-sm text-gray-700">
+                            Grade
+                        </label>
 
-    <input type="text" name="name" class="form-control">
+                        <select
+                            name="grade"
+                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                            required
+                        >
+                            <option value="">Select Grade</option>
+                            <option value="9">Grade 9</option>
+                            <option value="10">Grade 10</option>
+                            <option value="11">Grade 11</option>
+                            <option value="12">Grade 12</option>
+                        </select>
+                    </div>
 
-    <button type="submit" class="btn btn-primary mt-3">
-        Save Class
-    </button>
+                    <!-- Section -->
+                    <div class="mb-4">
+                        <label class="block font-medium text-sm text-gray-700">
+                            Section
+                        </label>
 
-</form>
+                        <input
+                            type="text"
+                            name="name"
+                            placeholder="Example: A"
+                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                            required
+                        >
+                    </div>
 
-@endsection
+                    <button
+                        type="submit"
+                        class="px-4 py-2 bg-blue-600 text-white rounded"
+                    >
+                        Create Section
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+
+</x-app-layout>
