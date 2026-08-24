@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class ClassModel extends Model
 {
@@ -24,5 +25,9 @@ public function teachers(): BelongsToMany
         'class_id',
         'teacher_id'
     );
+}
+public function attendances(): HasMany
+{
+    return $this->hasMany(Attendance::class, 'class_id');
 }
 }

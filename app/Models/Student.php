@@ -2,6 +2,7 @@
 
 namespace App\Models;
 use App\Models\User;
+use App\Models\Attendance;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -28,5 +29,13 @@ public function user(): BelongsTo
 public function marks(): HasMany
 {
     return $this->hasMany(Mark::class);
+}
+public function attendances(): HasMany
+{
+    return $this->hasMany(Attendance::class);
+}
+public function assessmentMarks(): HasMany
+{
+    return $this->hasMany(StudentAssessmentMark::class);
 }
 }

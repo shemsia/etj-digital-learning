@@ -30,9 +30,13 @@ public function manageClass($id)
         ->with('students.user')
         ->findOrFail($id);
 
+    $activeSemester = \App\Models\Semester::where('is_active', true)
+        ->first();
+
     return view('teacher.manage-class', compact(
         'teacher',
-        'class'
+        'class',
+        'activeSemester'
     ));
 }
     public function index()

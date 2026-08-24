@@ -3,12 +3,14 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\TeacherController as TeacherDashboardController;
+use App\Http\Controllers\TeacherAttendanceController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\Admin\StudentController as AdminStudentController;
 use App\Http\Controllers\Admin\ClassController;
 use App\Http\Controllers\Admin\SubjectController;
 use App\Http\Controllers\Admin\TeacherController;
 use App\Http\Controllers\Admin\StudentImportController;
+use App\Http\Controllers\SubjectOfferingController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -38,15 +40,35 @@ require __DIR__.'/auth.php';
 Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])
     ->middleware(['auth', 'role:admin'])
     ->name('admin.dashboard');
-
+Route::post('/admin/semester/{id}/activate', [AdminController::class, 'activateSemester'])
+    ->middleware(['auth', 'role:admin'])
+    ->name('admin.semester.activate');
 // Teacher Dashboard
 Route::get('/teacher/dashboard', [TeacherDashboardController::class, 'dashboard'])
     ->middleware(['auth', 'role:teacher'])
     ->name('teacher.dashboard');
-    Route::get('/teacher/class/{id}', [TeacherDashboardController::class, 'manageClass'])
+Route::get('/teacher/class/{id}', [TeacherDashboardController::class, 'manageClass'])
     ->middleware(['auth', 'role:teacher'])
     ->name('teacher.class.manage');
-    
+Route::get('/teacher/class/{classId}/attendance', [TeacherAttendanceController::class, 'index'])
+    ->middleware(['auth', 'role:teacher'])
+    ->name('teacher.attendance.index');
+    Route::post('/teacher/class/{classId}/attendance', [TeacherAttendanceController::class, 'store'])
+    ->middleware(['auth', 'role:teacher'])
+    ->name('teacher.attendance.store');
+    Route::get(
+    '/teacher/attendance/{classId}/report',
+    [TeacherAttendanceController::class, 'report']
+)->name('teacher.attendance.report');
+Route::get(
+    '/teacher/attendance/{classId}/report/pdf',
+    [TeacherAttendanceController::class, 'reportPdf']
+)->middleware(['auth', 'role:teacher'])
+ ->name('teacher.attendance.report.pdf');
+
+
+
+
 Route::get('/teacher/marks', [TeacherDashboardController::class, 'marks'])
     ->middleware(['auth', 'role:teacher'])
     ->name('teacher.marks');
@@ -129,3 +151,14 @@ Route::delete('/admin/students/{id}', [AdminStudentController::class, 'destroy']
     ->name('admin.students.update');
     Route::post('/admin/students/{id}/reset-password', [AdminStudentController::class, 'resetPassword'])
     ->name('admin.students.reset-password');
+    Route::get('/admin/subject-offerings', [SubjectOfferingController::class, 'index'])
+    ->name('admin.subject_offerings.index');
+    Route::get('/admin/subject-offerings/create', [SubjectOfferingController::class, 'create'])
+    ->name('admin.subject_offerings.create');
+    Route::post('/admin/subject-offerings', [SubjectOfferingController::class, 'store'])
+    ->name('admin.subject_offerings.store');
+    Route::get('/admin/subject-offerings/{id}/edit', [SubjectOfferingController::class, 'edit'])
+    ->name('admin.subject_offerings.edit');
+
+Route::put('/admin/subject-offerings/{id}', [SubjectOfferingController::class, 'update'])
+    ->name('admin.subject_offerings.update');

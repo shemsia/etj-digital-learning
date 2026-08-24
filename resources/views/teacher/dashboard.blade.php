@@ -50,10 +50,8 @@
 
                   <a
     href="{{ route('teacher.class.manage', $class->id) }}"
-    class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
->
-    Manage Class
-</a>
+    class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+    Manage Class</a>
 
                 </div>
 
@@ -111,4 +109,4 @@
 
 </div>
 
-@endsections
+@endsection
