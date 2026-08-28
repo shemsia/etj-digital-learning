@@ -7,7 +7,7 @@ use App\Models\SubjectOffering;
 use App\Models\Subject;
 use App\Models\Module;
 use App\Models\Assessment;
-
+use App\Models\Teacher;
 class SubjectOfferingController extends Controller
 {
     /**
@@ -18,9 +18,10 @@ class SubjectOfferingController extends Controller
         $offerings = SubjectOffering::with([
             'subject',
             'semester',
-            'modules.assessments'
+            'modules.assessments',
+    'teachers.user'
         ])->get();
-
+$teachers = Teacher::with('user')->orderBy('id')->get();
         return view('admin.subject_offerings.index', compact('offerings'));
     }
     public function create()
@@ -252,5 +253,48 @@ public function update(Request $request, $id)
             'success',
             'Subject offering and modules updated successfully.'
         );
+}
+public function destroy($id)
+{
+    $offering = SubjectOffering::with('modules')->findOrFail($id);
+
+    // Check if any module has assessments
+    foreach ($offering->modules as $module) {
+        if ($module->assessments()->exists()) {
+            return back()->withErrors([
+                'delete' =>
+                    'This subject offering cannot be deleted because one or more modules already have assessments.',
+            ]);
+        }
+    }
+
+    // Delete modules first
+    foreach ($offering->modules as $module) {
+        $module->delete();
+    }
+
+    // Delete subject offering
+    $offering->delete();
+
+    return redirect()
+        ->route('admin.subject_offerings.index')
+        ->with('success', 'Subject offering deleted successfully.');
+}
+public function assignTeacher(Request $request, $id)
+{
+    $offering = SubjectOffering::findOrFail($id);
+
+    $validated = $request->validate([
+        'teacher_id' => ['required', 'exists:teachers,id'],
+    ]);
+
+    $offering->teachers()->syncWithoutDetaching([
+        $validated['teacher_id']
+    ]);
+
+    return back()->with(
+        'success',
+        'Teacher assigned to subject offering successfully.'
+    );
 }
 }

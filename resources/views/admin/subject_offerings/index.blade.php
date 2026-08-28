@@ -41,29 +41,33 @@
                         <div class="overflow-x-auto">
                             <table class="min-w-full border border-gray-300">
 
-                                <thead class="bg-gray-100">
-                                    <tr>
-                                        <th class="border px-4 py-3 text-left">
-                                            Subject
-                                        </th>
+                      <thead class="bg-gray-100">
+    <tr>
+        <th class="border px-4 py-3 text-left">
+            Subject
+        </th>
 
-                                        <th class="border px-4 py-3 text-left">
-                                            Semester
-                                        </th>
+        <th class="border px-4 py-3 text-left">
+            Semester
+        </th>
 
-                                        <th class="border px-4 py-3 text-left">
-                                            Grade
-                                        </th>
+        <th class="border px-4 py-3 text-left">
+            Grade
+        </th>
 
-                                        <th class="border px-4 py-3 text-left">
-                                            Modules
-                                        </th>
+        <th class="border px-4 py-3 text-left">
+            Modules
+        </th>
 
-                                        <th class="border px-4 py-3 text-left">
-                                            Action
-                                        </th>
-                                    </tr>
-                                </thead>
+        <th class="border px-4 py-3 text-left">
+            Teacher
+        </th>
+
+        <th class="border px-4 py-3 text-left">
+            Action
+        </th>
+    </tr>
+</thead>
 
                                 <tbody>
 
@@ -83,35 +87,72 @@
                                                 Grade {{ $offering->grade_level }}
                                             </td>
 
-                                            <td class="border px-4 py-3">
+                                           <td class="border px-4 py-3">
 
-                                                @foreach($offering->modules as $module)
+    @foreach($offering->modules as $module)
 
-                                                    <div class="mb-1">
-                                                        <strong>
-                                                            {{ $module->name }}
-                                                        </strong>
+        <div class="mb-1">
+            <strong>
+                {{ $module->name }}
+            </strong>
 
-                                                        — {{ $module->weight }}%
-                                                    </div>
+            — {{ $module->weight }}%
+        </div>
 
-                                                @endforeach
+    @endforeach
 
-                                                <div class="mt-2 font-semibold">
-                                                    Total:
-                                                    {{ $offering->modules->sum('weight') }}%
-                                                </div>
+    <div class="mt-2 font-semibold">
+        Total:
+        {{ $offering->modules->sum('weight') }}%
+    </div>
 
-                                            </td>
+</td>
 
-                                            <td class="border px-4 py-3">
 
-                                                <a href="{{ route('admin.subject_offerings.edit', $offering->id) }}"
-                                                   class="px-3 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600">
-                                                    Edit
-                                                </a>
+<td class="border px-4 py-3">
 
-                                            </td>
+    @if($offering->teachers->count())
+
+        @foreach($offering->teachers as $teacher)
+            <div class="mb-1">
+                {{ $teacher->user->name }}
+            </div>
+        @endforeach
+
+    @else
+
+        <span class="text-gray-500">
+            Not assigned
+        </span>
+
+    @endif
+
+</td>
+                                       <td class="border px-4 py-3">
+    <div class="flex items-center gap-2">
+
+        <a href="{{ route('admin.subject_offerings.edit', $offering->id) }}"
+           class="inline-flex items-center justify-center w-20 h-10 bg-yellow-500 text-white rounded hover:bg-yellow-600">
+            Edit
+        </a>
+
+        <form action="{{ route('admin.subject_offerings.destroy', $offering->id) }}"
+              method="POST"
+              class="inline-flex"
+              onsubmit="return confirm('Are you sure you want to delete this subject offering?');">
+
+            @csrf
+            @method('DELETE')
+
+            <button type="submit"
+                    class="inline-flex items-center justify-center w-20 h-10 bg-red-600 text-white rounded hover:bg-red-700">
+                Delete
+            </button>
+
+        </form>
+
+    </div>
+</td>
 
                                         </tr>
 

@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Models;
-
+use App\Models\SubjectOffering;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -36,6 +36,15 @@ public function classes(): BelongsToMany
         'class_teacher',
         'teacher_id',
         'class_id'
+    );
+}
+public function subjectOfferings(): BelongsToMany
+{
+    return $this->belongsToMany(
+        SubjectOffering::class,
+        'teacher_subject_offering',
+        'teacher_id',
+        'subject_offering_id'
     );
 }
 }
